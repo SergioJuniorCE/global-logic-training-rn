@@ -1,17 +1,21 @@
-import { Button, Text, TextInput, View } from 'react-native';
+import {
+  Button,
+  FlatList,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { useRef, useState } from 'react';
 
 export default function Index() {
   const [todos, setTodos] = useState<string[]>([]);
-
-  const todoRef = useRef<TextInput>(null);
+  const [todo, setTodo] = useState<string>('');
 
   const handleAddTodo = () => {
-    if (todoRef.current) {
-      console.log('ASD', todoRef.current.value);
-      setTodos([...todos, todoRef.current.value]);
-      todoRef.current.clear();
-    }
+    setTodos([...todos, todo]);
+    setTodo('');
   };
 
   const handleClearTodos = () => {
@@ -24,37 +28,25 @@ export default function Index() {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white',
       }}
     >
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'row',
-          gap: 10,
-        }}
+      <TextInput placeholder="Add a todo" value={todo} onChangeText={setTodo} />
+      <Pressable
+        onPress={handleAddTodo}
+        style={{ backgroundColor: 'black', padding: 10, borderRadius: 5 }}
       >
-        <TextInput
-          placeholder="Add a todo"
-          ref={todoRef}
-          style={{
-            flex: 1,
-            borderWidth: 1,
-            borderColor: 'black',
-            borderRadius: 5,
-            padding: 10,
-          }}
-        />
-        <Button title="Add" onPress={handleAddTodo} color="black" />
-        <Button title="Clear" onPress={handleClearTodos} />
-      </View>
-      {todos.map((todo, index) => (
-        <Text key={index} style={{ fontSize: 20, margin: 10, color: 'black' }}>
-          {todo}
-        </Text>
-      ))}
+        <Text className="text-white">Add</Text>
+      </Pressable>
+      <Pressable onPress={handleClearTodos} style={{ backgroundColor: 'red', padding: 10, borderRadius: 5 }}>
+        <Text className="text-white">Clear</Text>
+      </Pressable>
+
+      <FlatList
+        data={todos}
+        renderItem={({ item }) => (
+          <Text className="text-2xl">{item}</Text>
+        )}
+      />
     </View>
   );
 }
